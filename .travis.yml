@@ -10,14 +10,14 @@ script:
 
 # Build all images
 after_success:
-  - docker build -t ddzmitry/multi-client -f ./client
-  - docker build -t ddzmitry/multi-nginx  -f ./nginx
-  - docker build -t ddzmitry/multi-server -f ./server
-  - docker build -t ddzmitry/multi-worker -f ./worker 
+  - docker build -t ddzmitry/multi-client:latest -f ./client
+  - docker build -t ddzmitry/multi-nginx:latest   -f ./nginx
+  - docker build -t ddzmitry/multi-server:latest  -f ./server
+  - docker build -t ddzmitry/multi-worker:latest  -f ./worker 
   # Log in to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Take images and Push all to DockerHub
-  - docker push ddzmitry/multi-client
-  - docker push ddzmitry/multi-nginx
-  - docker push ddzmitry/multi-server
-  - docker push ddzmitry/multi-worker
+  - docker push ddzmitry/multi-client:latest 
+  - docker push ddzmitry/multi-nginx:latest 
+  - docker push ddzmitry/multi-server:latest 
+  - docker push ddzmitry/multi-worker:latest 
