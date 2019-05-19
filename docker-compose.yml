@@ -1,0 +1,55 @@
+version : '3'
+services:
+  postgres:
+    image: 'postgres:latest'
+  redis:
+    image: 'redis:latest'
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      #map to local
+      - '3050:80'
+  api:
+    # Specify Build
+    build:
+      dockerfile: Dockerfile.dev
+      # Specify WHERE to find Dockerfile
+      context: ./server
+    volumes:
+      # do not overwrite it  
+      - /app/node_modules
+      # changes applied in server will reflect in app folder
+      - ./server:/app
+    #Setting up an environment for server build
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PGUSER=postgres
+      - PGHOST=postgres
+      - PGDATABASE=postgres
+      - PGPASSWORD=postgres_password
+      - PGPORT=5432
+  client:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+  worker:
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./worker
+    volumes:
+      - /app/node_modules
+      - ./worker:/app      
+
+# docker-compose up --build
+# docker-compose up
+
